@@ -1,0 +1,53 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Organization {
+  id          String       @id @default(cuid())
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  inn         String?
+  name        String?
+  commissions Commission[]
+  reports     Report[]
+  employees   Employee[]
+}
+
+model Employee {
+  id             String        @id @default(cuid())
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  fullName       String?
+  position       String?
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+  organizationId String?
+}
+
+model Report {
+  id             String                @id @default(cuid())
+  createdAt      DateTime              @default(now())
+  updatedAt      DateTime              @updatedAt
+  reportType     EnumReportReportType?
+  reportName     String?
+  organization   Organization?         @relation(fields: [organizationId], references: [id])
+  organizationId String?
+}
+
+model Commission {
+  id             String        @id @default(cuid())
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  fullName       String?
+  position       String?
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+  organizationId String?
+}
+
+enum EnumReportReportType {
+  Option1
+}
